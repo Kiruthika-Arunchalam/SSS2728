@@ -208,6 +208,57 @@ fig.update_layout(showlegend=False)
 st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------
+# TREEMAP VIEW
+# ---------------------------
+# ---------------------------
+# IMPROVED TREEMAP
+# ---------------------------
+# st.markdown('<div class="section">Operator Distribution (Clean Treemap)</div>', unsafe_allow_html=True)
+
+# # Prepare Data
+# trend = filtered_df["Operator_Code"].value_counts().reset_index()
+# trend.columns = ["Operator", "Count"]
+
+# # Top N selection
+# top_n = st.slider("Treemap Top Operators", 5, 30, 15)
+
+# top_df = trend.head(top_n)
+
+# others_count = trend["Count"][top_n:].sum()
+
+# if others_count > 0:
+#     others_df = pd.DataFrame({
+#         "Operator": ["OTHERS"],
+#         "Count": [others_count]
+#     })
+#     treemap_df = pd.concat([top_df, others_df])
+# else:
+#     treemap_df = top_df
+
+# Treemap
+treemap_df = trend.copy()   # simple fix (or use your Top N logic)
+fig_tree = px.treemap(
+    treemap_df,
+    path=["Operator"],
+    values="Count",
+    color="Count",
+    color_continuous_scale="Blues"
+)
+
+# Improve layout
+fig_tree.update_traces(
+    textinfo="label+value",
+    textfont_size=14
+)
+
+fig_tree.update_layout(
+    margin=dict(t=30, l=10, r=10, b=10)
+)
+
+st.plotly_chart(style_chart(fig_tree), width='stretch')
+
+
+# ---------------------------
 # TOP ROUTES
 # ---------------------------
 st.markdown("### Top Routes")
